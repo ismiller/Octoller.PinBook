@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Octoller.PinBook.Web.Data.Model;
+using Octoller.PinBook.Web.Kernel;
+using Octoller.PinBook.Web.Kernel.Services;
 using Octoller.PinBook.Web.ViewModels;
+using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace Octoller.PinBook.Web.Controllers
@@ -10,13 +14,16 @@ namespace Octoller.PinBook.Web.Controllers
     {
         private UserManager<User> UserManager { get; }
         private SignInManager<User> SignInManager { get; }
+        private VkontacteApiService VkApiService { get; }
 
         public AccountController(
             UserManager<User> userManager,
+            VkontacteApiService vkontacteApiService,
             SignInManager<User> signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            VkApiService = vkontacteApiService;
         }
 
 
@@ -132,21 +139,84 @@ namespace Octoller.PinBook.Web.Controllers
         [HttpGet]
         public IActionResult ExternalLogin(string returnUrl, string providerName)
         {
+            returnUrl ??= Url.Action("Index", "Home");
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { returnUrl });
+            var properties = SignInManager.ConfigureExternalAuthenticationProperties(providerName, redirectUrl);
 
-            return View();
+            return Challenge(properties, providerName);
         }
 
         [HttpGet]
         public async Task<IActionResult> ExternalLoginCallback(string returnUrl)
         {
+            var loginInfo = await SignInManager.GetExternalLoginInfoAsync();
+            
+            if (loginInfo is null)
+            {
+                return RedirectToAction("Login", "Account");
+            }
 
-            return View();
+            var signInResult = await SignInManager.ExternalLoginSignInAsync(
+               loginProvider: loginInfo.LoginProvider, 
+               providerKey: loginInfo.ProviderKey, 
+               isPersistent: true, 
+               bypassTwoFactor: false);
+
+            if (signInResult.Succeeded)
+            {
+                return Redirect(returnUrl);
+            }
+            else
+            {
+                var userEmail = loginInfo.Principal.Claims
+                    .Where(c => c.Type == ClaimTypes.Email)
+                    .FirstOrDefault()
+                    .Value;
+
+                var user = await UserManager.FindByEmailAsync(userEmail);
+
+                if (user is null)
+                {
+                    _ = await UserManager.CreateAsync(new User
+                    {
+                        Email = userEmail,
+                        UserName = userEmail
+                    });
+
+                    user = await UserManager.FindByEmailAsync(userEmail);
+                }
+
+                var createAccountResult = await VkApiService.CreateVkAccountAsync(user.Id, userEmail, loginInfo);
+
+                if (createAccountResult.Succeeded)
+                {
+                    var addRoleResult = await UserManager.AddToRoleAsync(user, AppData.RolesData.UserRoleName);
+
+                    if (addRoleResult.Succeeded)
+                    {
+                        var addLoginInfoResult = await UserManager.AddLoginAsync(user, loginInfo);
+
+                        if (addLoginInfoResult.Succeeded)
+                        {
+                            await SignInManager.SignOutAsync();
+                            await SignInManager.SignInAsync(user, true);
+
+                            return Redirect(returnUrl);
+                        }
+                    }
+                }
+            }
+
+            return RedirectToAction("Login", new LoginViewModel
+            {
+                ReturnUrl = returnUrl
+            });
         }
 
         [HttpGet]
         public async Task<IActionResult> LogOut()
         {
-
+            await SignInManager.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
     }

@@ -6,7 +6,6 @@
 
   <ItemGroup>
     <Folder Include="Data\Configurations\" />
-    <Folder Include="Kernel\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +19,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="VkNet" Version="1.60.0" />
   </ItemGroup>
 
 </Project>
