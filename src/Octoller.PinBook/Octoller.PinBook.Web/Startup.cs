@@ -1,6 +1,5 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -27,11 +26,6 @@ namespace Octoller.PinBook.Web
             });
 
             services.AddControllersWithViews();
-
-            services.AddSpaStaticFiles(configuration =>
-            {
-                configuration.RootPath = "cloentapp/build";
-            });
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -43,22 +37,12 @@ namespace Octoller.PinBook.Web
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
+
             app.UseRouting();
 
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapDefaultControllerRoute();
-            });
-
-            app.UseSpa(configuration =>
-            {
-                configuration.Options.SourcePath = "clientapp";
-
-                if (env.IsDevelopment())
-                {
-                    configuration.UseReactDevelopmentServer(npmScript: "start");
-                }
             });
         }
     }

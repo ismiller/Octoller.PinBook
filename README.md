@@ -13,7 +13,6 @@ _План проекта, изложенный ниже, является пре
 * MS SQL Server
 * Microsoft.AspNetCore.Identity
 * Automapper (маппинг DTO)
-* React
 * Bootstrap фреймворк (CSS)
 * LINQ
 * (список будет дополняться)
