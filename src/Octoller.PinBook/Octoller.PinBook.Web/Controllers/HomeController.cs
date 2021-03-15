@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Octoller.PinBook.Web.ViewModels;
 
 namespace Octoller.PinBook.Web.Controllers
 {
@@ -6,7 +7,9 @@ namespace Octoller.PinBook.Web.Controllers
     {
         public IActionResult Index()
         {
-            return View();
+            return View(new HeaderViewModel { 
+                IsAuthenticated = User.Identity.IsAuthenticated
+            });
         }
     }
 }
