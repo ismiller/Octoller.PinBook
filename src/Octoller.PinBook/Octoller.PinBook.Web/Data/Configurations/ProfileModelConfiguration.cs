@@ -13,10 +13,12 @@ namespace Octoller.PinBook.Web.Data.Configurations
             builder.HasAlternateKey(p => p.UserId);
 
             builder.Property(p => p.Id).ValueGeneratedOnAdd();
+            builder.Property(p => p.Id).ValueGeneratedOnAdd();
             builder.Property(p => p.Avatar).HasColumnType("varbinary(max)");
             builder.Property(p => p.Location).HasMaxLength(150);
             builder.Property(p => p.Site).HasMaxLength(150);
-            builder.Property(p => p.About).HasMaxLength(1000);
+            builder.Property(p => p.About).HasMaxLength(1000).HasDefaultValue("<none>");
+
             builder.Property(p => p.CreatedAt).IsRequired();
             builder.Property(p => p.CreatedBy).IsRequired().HasMaxLength(100);
             builder.Property(p => p.UpdatedAt).IsRequired();

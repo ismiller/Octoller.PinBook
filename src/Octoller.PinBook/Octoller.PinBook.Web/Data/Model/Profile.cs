@@ -8,6 +8,18 @@ namespace Octoller.PinBook.Web.Data.Model
         ///<inheritdoc />
         public string Id { get; set; }
 
+        ///<inheritdoc />
+        public DateTime CreatedAt { get; set; }
+
+        ///<inheritdoc />
+        public string CreatedBy { get; set; }
+
+        ///<inheritdoc />
+        public DateTime UpdatedAt { get; set; }
+
+        ///<inheritdoc />
+        public string UpdatedBy { get; set; }
+
         /// <summary>
         /// Id пользователя
         /// </summary>
@@ -42,18 +54,5 @@ namespace Octoller.PinBook.Web.Data.Model
         /// Аватар пользователя 
         /// </summary>
         public byte[] Avatar { get; set; }
-
-        ///<inheritdoc />
-        public DateTime CreatedAt { get; set; }
-
-        ///<inheritdoc />
-        public string CreatedBy { get; set; }
-
-        ///<inheritdoc />
-        public DateTime UpdatedAt { get; set; }
-
-        ///<inheritdoc />
-        public string UpdatedBy { get; set; }
-
     }
 }
