@@ -11,6 +11,7 @@ using System.Text;
 using System;
 using Octoller.PinBook.Web.Kernel;
 using Octoller.PinBook.Web.Data.Model;
+using Microsoft.EntityFrameworkCore;
 
 namespace Octoller.PinBook.Web.Data
 {
@@ -35,6 +36,8 @@ namespace Octoller.PinBook.Web.Data
             if (!dbExist)
             {
                 (context.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Create();
+                context.Database.Migrate();
+
             }
 
             var errorMessage = new StringBuilder();

@@ -5,8 +5,8 @@ namespace Octoller.PinBook.Web.Data.Model
     public class User : IdentityUser
     {
         /// <summary>
-        /// Данные о аккаунте пользователя
+        /// Данные о профиле пользователя
         /// </summary>
-        public Account Account { get; set; }
+        public Profile Profile { get; set; }
     }
 }

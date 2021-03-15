@@ -3,11 +3,9 @@ using System;
 
 namespace Octoller.PinBook.Web.Data.Model
 {
-    /// <summary>
-    /// Содержит дополнительную информацию о пользователе
-    /// </summary>
-    public class Account : IIdentity, IAuditable
+    public class Profile : IIdentity, IAuditable
     {
+        ///<inheritdoc />
         public string Id { get; set; }
 
         /// <summary>
@@ -21,24 +19,29 @@ namespace Octoller.PinBook.Web.Data.Model
         public User User { get; set; }
 
         /// <summary>
-        /// Id группы на стороне сервиса Vk
-        /// </summary>
-        public string VkId { get; set; }
-
-        /// <summary>
-        /// Полное имя пользователя
+        /// Имя пользователя
         /// </summary>
         public string Name { get; set; }
 
         /// <summary>
-        /// Аватар пользователя
+        /// Сайт пользователя
         /// </summary>
-        public byte[] Photo { get; set; }
+        public string Site { get; set; }
 
         /// <summary>
-        /// Ключ доступа
+        /// Местоположение пользователя
         /// </summary>
-        public string AccessToken { get; set; }
+        public string Location { get; set; }
+
+        /// <summary>
+        /// Дополнительная информация о пользователе
+        /// </summary>
+        public string About { get; set; }
+
+        /// <summary>
+        /// Аватар пользователя 
+        /// </summary>
+        public byte[] Avatar { get; set; }
 
         ///<inheritdoc />
         public DateTime CreatedAt { get; set; }
@@ -51,5 +54,6 @@ namespace Octoller.PinBook.Web.Data.Model
 
         ///<inheritdoc />
         public string UpdatedBy { get; set; }
+
     }
 }

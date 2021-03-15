@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace Octoller.PinBook.Web.Data.Stores
 {
-    public class AccountStore : BaseStore<DatabaseAppContext>
+    public class ProfileStore : BaseStore<DatabaseAppContext>
     {
-        public AccountStore(DatabaseAppContext context) : base(context)
+        public ProfileStore(DatabaseAppContext context) : base(context)
         {
         }
 
-        private DbSet<Account> AccountsSet => Context.Set<Account>();
-        public IQueryable<Account> Accounts => AccountsSet;
+        private DbSet<Profile> ProfileSet => Context.Set<Profile>();
+        public IQueryable<Profile> Accounts => ProfileSet;
 
-        public async Task<bool> CreateAsync(Account account, string initiator = null)
+        public async Task<bool> CreateAsync(Profile account, string initiator = null)
         {
             if (account is null)
             {
@@ -29,7 +29,7 @@ namespace Octoller.PinBook.Web.Data.Stores
             return true;
         }
 
-        public async Task<bool> UpdateAsync(Account account, string initiator = null)
+        public async Task<bool> UpdateAsync(Profile account, string initiator = null)
         {
             if (account is null)
             {
@@ -51,7 +51,7 @@ namespace Octoller.PinBook.Web.Data.Stores
             return true;
         }
 
-        public async Task<bool> DeleteAsync(Account account)
+        public async Task<bool> DeleteAsync(Profile account)
         {
             if (account is null)
             {
@@ -72,24 +72,24 @@ namespace Octoller.PinBook.Web.Data.Stores
             return true;
         }
 
-        public async Task<Account> GetByIdAsync(string id)
+        public async Task<Profile> GetByIdAsync(string id)
         {
             if (id is null)
             {
                 throw new ArgumentNullException(nameof(id));
             }
 
-            return await AccountsSet.FindAsync(new[] { id });
+            return await ProfileSet.FindAsync(new[] { id });
         }
 
-        public async Task<Account> GetByUserIdAsync(string userId)
+        public async Task<Profile> GetByUserIdAsync(string userId)
         {
             if (userId is null)
             {
                 throw new ArgumentNullException(nameof(userId));
             }
 
-            return await AccountsSet
+            return await ProfileSet
                 .FirstOrDefaultAsync(a => a.UserId == userId);
         }
     }

@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Octoller.PinBook.Web.Data.Model;
 using Octoller.PinBook.Web.Kernel;
-using Octoller.PinBook.Web.Kernel.Services;
 using Octoller.PinBook.Web.ViewModels;
 using System.Linq;
 using System.Security.Claims;
@@ -14,16 +13,13 @@ namespace Octoller.PinBook.Web.Controllers
     {
         private UserManager<User> UserManager { get; }
         private SignInManager<User> SignInManager { get; }
-        private VkontakteApiService VkApiService { get; }
 
         public AccountController(
             UserManager<User> userManager,
-            VkontakteApiService vkontacteApiService,
             SignInManager<User> signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
-            VkApiService = vkontacteApiService;
         }
 
 
@@ -188,24 +184,19 @@ namespace Octoller.PinBook.Web.Controllers
                     user = await UserManager.FindByEmailAsync(userEmail);
                 }
 
-                var createAccountResult = await VkApiService.CreateVkAccountAsync(user.Id, userEmail, loginInfo);
-
-                if (createAccountResult.Succeeded)
+                if (!await UserManager.IsInRoleAsync(user, AppData.RolesData.UserRoleName))
                 {
-                    if (!await UserManager.IsInRoleAsync(user, AppData.RolesData.UserRoleName))
-                    {
-                        _ = await UserManager.AddToRoleAsync(user, AppData.RolesData.UserRoleName);
-                    }
+                    _ = await UserManager.AddToRoleAsync(user, AppData.RolesData.UserRoleName);
+                }
 
-                    var addLoginInfoResult = await UserManager.AddLoginAsync(user, loginInfo);
+                var addLoginInfoResult = await UserManager.AddLoginAsync(user, loginInfo);
 
-                    if (addLoginInfoResult.Succeeded)
-                    {
-                        await SignInManager.SignOutAsync();
-                        await SignInManager.SignInAsync(user, true);
+                if (addLoginInfoResult.Succeeded)
+                {
+                    await SignInManager.SignOutAsync();
+                    await SignInManager.SignInAsync(user, true);
 
-                        return Redirect(returnUrl);
-                    }
+                    return Redirect(returnUrl);
                 }
             }
 
