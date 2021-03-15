@@ -42,7 +42,8 @@ namespace Octoller.PinBook.Web.Data.Stores
             try
             {
                 await SaveChangeAsync(initiator);
-            } catch
+            } 
+            catch
             {
                 ///TODO: передача ошибки выше по стеку
                 return false;
@@ -63,7 +64,8 @@ namespace Octoller.PinBook.Web.Data.Stores
             try
             {
                 await SaveChangeAsync();
-            } catch
+            } 
+            catch
             {
                 ///TODO: передача ошибки выше по стеку
                 return false;

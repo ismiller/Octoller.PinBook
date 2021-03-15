@@ -1,0 +1,24 @@
+﻿@model ProfileViewModel;
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "PinBook.Profile: " + @Model.Name;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-3 pt-5"></div>
+        <div class="col-1 pt-5">
+            <h5 class="text-center">@Model.Name</h5>
+            <nav class="nav flex-column nav-pills">
+                <a class="nav-link active" aria-current="page" href="#">Профиль</a>
+                <a class="nav-link" href="#">Списки</a>
+                <a class="nav-link" href="#">Аккаунт</a>
+            </nav>
+        </div>
+        <div class="col-5 pt-5">
+            <h5 class="text-center">Настройки</h5>
+        </div>
+        <div class="col-3 pt-5"></div>
+    </div>
+</div>

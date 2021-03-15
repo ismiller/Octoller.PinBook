@@ -12,6 +12,7 @@ using Octoller.PinBook.Web.Data;
 using Octoller.PinBook.Web.Data.Model;
 using Octoller.PinBook.Web.Data.Stores;
 using Octoller.PinBook.Web.Kernel;
+using Octoller.PinBook.Web.Kernel.Services;
 using System.Security.Claims;
 using System.Threading.Tasks;
 
@@ -62,6 +63,7 @@ namespace Octoller.PinBook.Web
             });
 
             services.AddScoped<ProfileStore>();
+            services.AddScoped<ProfileManager>();
 
             services.AddControllersWithViews();
         }

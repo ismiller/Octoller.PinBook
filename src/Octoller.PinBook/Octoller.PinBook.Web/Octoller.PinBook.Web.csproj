@@ -18,8 +18,4 @@
     <PackageReference Include="VkNet" Version="1.60.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Kernel\Services\" />
-  </ItemGroup>
-
 </Project>

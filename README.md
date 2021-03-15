@@ -32,12 +32,11 @@ ____
     - [x] Настройка добавления учетной записи при создании новой базы данных
     - [ ] Привязка аккаунта соц-сетей для входа к уже созданному аккаунту
 - [ ] Создание сущностей для работы со списками и книгами
-    - [ ] Book 
-    - [ ] Author 
-    - [ ] Category
-    - [ ] PublishingHouse
-    - [ ] BookList
-    - [ ] ListCategory
+    - [x] Book 
+    - [x] Author 
+    - [x] Category
+    - [x] PublishingHouse
+    - [x] BookList
     - [ ] Commentary
     - [ ] Like
     - [ ] Notification

@@ -8,7 +8,7 @@ namespace Octoller.PinBook.Web.Data.Configurations
     {
         public void Configure(EntityTypeBuilder<Profile> builder)
         {
-            builder.ToTable("Accounts");
+            builder.ToTable("Profiles");
             builder.HasKey(p => p.Id);
             builder.HasAlternateKey(p => p.UserId);
 

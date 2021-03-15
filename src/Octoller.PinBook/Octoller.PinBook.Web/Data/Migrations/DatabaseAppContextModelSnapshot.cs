@@ -150,15 +150,18 @@ namespace Octoller.PinBook.Web.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
-            modelBuilder.Entity("Octoller.PinBook.Web.Data.Model.Account", b =>
+            modelBuilder.Entity("Octoller.PinBook.Web.Data.Model.Profile", b =>
                 {
                     b.Property<string>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("nvarchar(450)");
 
-                    b.Property<string>("AccessToken")
-                        .HasMaxLength(250)
-                        .HasColumnType("nvarchar(250)");
+                    b.Property<string>("About")
+                        .HasMaxLength(1000)
+                        .HasColumnType("nvarchar(1000)");
+
+                    b.Property<byte[]>("Avatar")
+                        .HasColumnType("varbinary(max)");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
@@ -168,40 +171,34 @@ namespace Octoller.PinBook.Web.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasMaxLength(500)
-                        .HasColumnType("nvarchar(500)");
+                    b.Property<string>("Location")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
-                    b.Property<byte[]>("Photo")
-                        .HasColumnType("varbinary(max)");
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Site")
+                        .HasMaxLength(150)
+                        .HasColumnType("nvarchar(150)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("UpdatedBy")
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(100)");
-
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("VkId")
                         .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
-                    b.HasAlternateKey("VkId");
+                    b.HasAlternateKey("UserId");
 
-                    b.HasIndex("Name");
-
-                    b.HasIndex("UserId")
-                        .IsUnique()
-                        .HasFilter("[UserId] IS NOT NULL");
-
-                    b.ToTable("Accounts");
+                    b.ToTable("Profiles");
                 });
 
             modelBuilder.Entity("Octoller.PinBook.Web.Data.Model.User", b =>
@@ -320,18 +317,20 @@ namespace Octoller.PinBook.Web.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Octoller.PinBook.Web.Data.Model.Account", b =>
+            modelBuilder.Entity("Octoller.PinBook.Web.Data.Model.Profile", b =>
                 {
                     b.HasOne("Octoller.PinBook.Web.Data.Model.User", "User")
-                        .WithOne("Account")
-                        .HasForeignKey("Octoller.PinBook.Web.Data.Model.Account", "UserId");
+                        .WithOne("Profile")
+                        .HasForeignKey("Octoller.PinBook.Web.Data.Model.Profile", "UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("Octoller.PinBook.Web.Data.Model.User", b =>
                 {
-                    b.Navigation("Account");
+                    b.Navigation("Profile");
                 });
 #pragma warning restore 612, 618
         }

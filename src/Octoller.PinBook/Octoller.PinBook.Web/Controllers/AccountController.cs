@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Octoller.PinBook.Web.Data.Model;
 using Octoller.PinBook.Web.Kernel;
+using Octoller.PinBook.Web.Kernel.Services;
 using Octoller.PinBook.Web.ViewModels;
 using System.Linq;
 using System.Security.Claims;
@@ -13,13 +14,16 @@ namespace Octoller.PinBook.Web.Controllers
     {
         private UserManager<User> UserManager { get; }
         private SignInManager<User> SignInManager { get; }
+        private ProfileManager ProfileManager { get; }
 
         public AccountController(
             UserManager<User> userManager,
-            SignInManager<User> signInManager)
+            SignInManager<User> signInManager,
+            ProfileManager profileManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
+            ProfileManager = profileManager;
         }
 
 
@@ -62,6 +66,8 @@ namespace Octoller.PinBook.Web.Controllers
 
                     if (signInResult.Succeeded)
                     {
+                        await ProfileManager.CreateProfileAsync(user, new Profile());
+
                         return Redirect(loginModel.ReturnUrl);
                     }
                 }
@@ -118,7 +124,16 @@ namespace Octoller.PinBook.Web.Controllers
 
                 if (resultCreate.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, false);
+                    user = await UserManager.FindByEmailAsync(user.Email);
+
+                    if (!await UserManager.IsInRoleAsync(user, AppData.RolesData.UserRoleName))
+                    {
+                        _ = await UserManager.AddToRoleAsync(user, AppData.RolesData.UserRoleName);
+                    }
+
+                    await ProfileManager.CreateProfileAsync(user, new Profile());
+
+                    await SignInManager.SignInAsync(user, true);
 
                     return Redirect(registerModel.ReturnUrl);
                 } 
@@ -183,6 +198,8 @@ namespace Octoller.PinBook.Web.Controllers
 
                     user = await UserManager.FindByEmailAsync(userEmail);
                 }
+
+                var createProfileResult = await ProfileManager.CreateProfileAsync(user, new Profile());
 
                 if (!await UserManager.IsInRoleAsync(user, AppData.RolesData.UserRoleName))
                 {

@@ -32,7 +32,7 @@
                                 @Model.ShowName
                             </a>
                             <ul class="dropdown-menu dropdown-menu-right dropdown-menu-dark" aria-labelledby="navbarDropdown">
-                                <li><a href="#" class="dropdown-item disabled">Ваш профиль</a></li>
+                                <li><a asp-controller="User" asp-action="Profile" class="dropdown-item">Ваш профиль</a></li>
                                 <li><a href="#" class="dropdown-item disabled">Ваши списки</a></li>
                                 <li><div class="dropdown-divider"></div></li>
                                 <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout">Выйти</a></li>
