@@ -10,7 +10,7 @@ namespace Octoller.PinBook.Web.Data.Configurations
         {
             builder.ToTable("BookLists");
             builder.HasKey(bl => bl.Id);
-            builder.HasAlternateKey(bl => bl.UserId);
+            builder.HasAlternateKey(bl => bl.ProfileId);
 
             builder.Property(bl => bl.Id).ValueGeneratedOnAdd();
             builder.Property(bl => bl.Name).IsRequired().HasMaxLength(250);
@@ -22,7 +22,6 @@ namespace Octoller.PinBook.Web.Data.Configurations
             builder.Property(bl => bl.UpdatedBy).HasMaxLength(100);
 
             builder.HasMany(bl => bl.Books).WithMany(b => b.BookLists);
-            builder.HasOne(bl => bl.User).WithMany(u => u.BookLists);
         }
     }
 }

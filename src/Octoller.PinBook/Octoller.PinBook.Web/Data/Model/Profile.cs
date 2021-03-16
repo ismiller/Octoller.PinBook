@@ -1,5 +1,6 @@
 ﻿using Octoller.PinBook.Web.Data.Model.Abstraction;
 using System;
+using System.Collections.Generic;
 
 namespace Octoller.PinBook.Web.Data.Model
 {
@@ -54,5 +55,10 @@ namespace Octoller.PinBook.Web.Data.Model
         /// Аватар пользователя 
         /// </summary>
         public byte[] Avatar { get; set; }
+
+        /// <summary>
+        /// Списки
+        /// </summary>
+        public IEnumerable<BookList> BookLists { get; set; }
     }
 }

@@ -24,7 +24,9 @@ namespace Octoller.PinBook.Web.Data.Configurations
             builder.Property(p => p.UpdatedAt).IsRequired();
             builder.Property(p => p.UpdatedBy).IsRequired().HasMaxLength(100);
 
-            builder.HasOne(a => a.User).WithOne(u => u.Profile);
+            builder.HasOne(p => p.User).WithOne(u => u.Profile);
+            builder.HasMany(p => p.BookLists).WithOne(bl => bl.Profile);
+
         }
     }
 }

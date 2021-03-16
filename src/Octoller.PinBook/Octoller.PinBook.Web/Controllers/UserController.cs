@@ -42,5 +42,19 @@ namespace Octoller.PinBook.Web.Controllers
 
             return View(new ProfileViewModel());
         }
+
+        [Authorize(Policy = "Users")]
+        public async Task<IActionResult> Account()
+        {
+
+            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+
+            if (user is not null)
+            {
+
+            }
+
+            return View();
+        }
     }
 }

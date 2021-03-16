@@ -34,12 +34,12 @@ namespace Octoller.PinBook.Web.Data.Model
         /// <summary>
         /// Id пользователя
         /// </summary>
-        public int UserId { get; set; }
+        public int ProfileId { get; set; }
 
         /// <summary>
         /// Пользователь
         /// </summary>
-        public User User { get; set; }
+        public Profile Profile { get; set; }
 
         /// <summary>
         /// Книги

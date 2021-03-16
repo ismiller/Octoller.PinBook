@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Identity;
-using System.Collections.Generic;
 
 namespace Octoller.PinBook.Web.Data.Model
 {
@@ -9,10 +8,5 @@ namespace Octoller.PinBook.Web.Data.Model
         /// Данные о профиле пользователя
         /// </summary>
         public Profile Profile { get; set; }
-
-        /// <summary>
-        /// Списки книг
-        /// </summary>
-        public IEnumerable<BookList> BookLists { get; set; }
     }
 }
