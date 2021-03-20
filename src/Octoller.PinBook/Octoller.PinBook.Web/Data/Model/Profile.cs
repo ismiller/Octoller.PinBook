@@ -1,11 +1,14 @@
 ﻿using Octoller.PinBook.Web.Data.Model.Abstraction;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Octoller.PinBook.Web.Data.Model
 {
-    public class Profile : IIdentity, IAuditable
+    public class Profile : IIdEntity, IAuditable, IEquatable<Profile>
     {
+        #region SystemProperties
+
         ///<inheritdoc />
         public string Id { get; set; }
 
@@ -20,6 +23,8 @@ namespace Octoller.PinBook.Web.Data.Model
 
         ///<inheritdoc />
         public string UpdatedBy { get; set; }
+
+        #endregion
 
         /// <summary>
         /// Id пользователя
@@ -60,5 +65,33 @@ namespace Octoller.PinBook.Web.Data.Model
         /// Списки
         /// </summary>
         public IEnumerable<BookList> BookLists { get; set; }
+
+        #region Override object methods
+
+        ///<inheritdoc/>
+        public override bool Equals(object obj) =>
+            this.Equals(obj as Profile);
+
+        ///<inheritdoc/>
+        public bool Equals(Profile profile) =>
+            profile != null
+            && this.Id == profile.Id
+            && this.UserId == profile.UserId;
+
+        ///<inheritdoc/>
+        public override string ToString() =>
+            "\nProfile: " +
+            $"\n\tId: {Id}" +
+            $"\n\tUser: {UserId}" +
+            $"\n\tName: {Name}" +
+            $"\n\tSite: {Site}" +
+            $"\n\tLocation: {Location}" +
+            $"\n\tNumber of book list: {BookLists?.Count()}";
+
+        ///<inheritdoc/>
+        public override int GetHashCode() =>
+            HashCode.Combine(this.Id, this.UserId); 
+
+        #endregion
     }
 }

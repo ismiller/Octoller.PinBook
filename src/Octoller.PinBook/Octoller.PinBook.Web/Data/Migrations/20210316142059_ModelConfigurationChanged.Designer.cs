@@ -9,7 +9,7 @@ using Octoller.PinBook.Web.Data;
 
 namespace Octoller.PinBook.Web.Data.Migrations
 {
-    [DbContext(typeof(DatabaseAppContext))]
+    [DbContext(typeof(PinBookDb))]
     [Migration("20210316142059_ModelConfigurationChanged")]
     partial class ModelConfigurationChanged
     {

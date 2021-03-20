@@ -13,7 +13,8 @@ namespace Octoller.PinBook.Web.Controllers
         private ProfileManager ProfileManager { get; }
         private UserManager<User> UserManager { get; }
 
-        public UserController(ProfileManager profileManager,
+        public UserController(
+            ProfileManager profileManager,
             UserManager<User> userManager)
         {
             ProfileManager = profileManager;

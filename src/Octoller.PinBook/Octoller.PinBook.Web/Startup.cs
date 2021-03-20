@@ -30,7 +30,7 @@ namespace Octoller.PinBook.Web
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<DatabaseAppContext>(options =>
+            services.AddDbContext<PinBookDb>(options =>
             {
                 options.UseSqlServer(Configuration.GetConnectionString("DevelopmentDb"));
             });
@@ -41,7 +41,7 @@ namespace Octoller.PinBook.Web
                 options.Password.RequireNonAlphanumeric = false;
                 options.User.RequireUniqueEmail = true;
             })
-            .AddEntityFrameworkStores<DatabaseAppContext>()
+            .AddEntityFrameworkStores<PinBookDb>()
             .AddDefaultTokenProviders();
 
             services.AddAuthentication()

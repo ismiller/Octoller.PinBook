@@ -9,7 +9,7 @@ using Octoller.PinBook.Web.Data;
 
 namespace Octoller.PinBook.Web.Data.Migrations
 {
-    [DbContext(typeof(DatabaseAppContext))]
+    [DbContext(typeof(PinBookDb))]
     [Migration("20210315141224_NewInitialMigration")]
     partial class NewInitialMigration
     {

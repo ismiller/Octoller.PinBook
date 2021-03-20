@@ -1,6 +1,6 @@
 ﻿namespace Octoller.PinBook.Web.Data.Model.Abstraction
 {
-    public interface IIdentity
+    public interface IIdEntity
     {
         /// <summary>
         /// Id

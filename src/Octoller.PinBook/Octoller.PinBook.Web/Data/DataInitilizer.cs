@@ -28,7 +28,7 @@ namespace Octoller.PinBook.Web.Data
         {
             IServiceScope scope = service.CreateScope();
             
-            using DatabaseAppContext context = scope.ServiceProvider.GetService<DatabaseAppContext>();
+            using PinBookDb context = scope.ServiceProvider.GetService<PinBookDb>();
 
             //проверяем, создана ли база данных, если нет - создаем
             var dbExist = (context.Database.GetService<IDatabaseCreator>() as RelationalDatabaseCreator).Exists();

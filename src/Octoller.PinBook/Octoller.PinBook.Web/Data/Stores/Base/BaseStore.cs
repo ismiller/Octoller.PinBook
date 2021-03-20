@@ -57,7 +57,8 @@ namespace Octoller.PinBook.Web.Data.Stores.Base
                 if (updatedAt != null && DateTime.Parse(updatedAt?.ToString()).Year < 1970)
                 {
                     entry.Property(nameof(IAuditable.UpdatedAt)).CurrentValue = date;
-                } else
+                } 
+                else
                 {
                     entry.Property(nameof(IAuditable.UpdatedAt)).CurrentValue = date;
                 }

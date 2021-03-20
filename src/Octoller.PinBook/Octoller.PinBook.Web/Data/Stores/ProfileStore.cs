@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace Octoller.PinBook.Web.Data.Stores
 {
-    public class ProfileStore : BaseStore<DatabaseAppContext>
+    public class ProfileStore : BaseStore<PinBookDb>
     {
-        public ProfileStore(DatabaseAppContext context) : base(context)
+        public ProfileStore(PinBookDb context) : base(context)
         {
         }
 

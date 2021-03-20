@@ -8,7 +8,7 @@ using Octoller.PinBook.Web.Data;
 
 namespace Octoller.PinBook.Web.Data.Migrations
 {
-    [DbContext(typeof(DatabaseAppContext))]
+    [DbContext(typeof(PinBookDb))]
     partial class DatabaseAppContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
