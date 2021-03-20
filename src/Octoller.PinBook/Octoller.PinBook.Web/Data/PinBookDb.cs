@@ -4,9 +4,9 @@ using Octoller.PinBook.Web.Data.Model;
 
 namespace Octoller.PinBook.Web.Data
 {
-    public class DatabaseAppContext : DbContextBase<User, DatabaseAppContext> 
+    public class PinBookDb : DbContextBase<User, PinBookDb> 
     {
-        public DatabaseAppContext(DbContextOptions<DatabaseAppContext> options) 
+        public PinBookDb(DbContextOptions<PinBookDb> options) 
             : base(options)
         { }
     }

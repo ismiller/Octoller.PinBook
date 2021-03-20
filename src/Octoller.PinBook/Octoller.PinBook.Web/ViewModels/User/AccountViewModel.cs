@@ -1,9 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Octoller.PinBook.Web.ViewModels
+namespace Octoller.PinBook.Web.ViewModels.Profiles
 {
     public class AccountViewModel
     {
+        public string Name { get; set; }
+
         [Display(Name = "Email")]
         [DataType(DataType.EmailAddress)]
         [Required(ErrorMessage = "Не указан Email")]

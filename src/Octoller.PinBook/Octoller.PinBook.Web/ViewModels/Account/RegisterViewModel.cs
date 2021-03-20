@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Octoller.PinBook.Web.ViewModels
+namespace Octoller.PinBook.Web.ViewModels.Account
 {
     public class RegisterViewModel : ExternalProviderViewModel
     {

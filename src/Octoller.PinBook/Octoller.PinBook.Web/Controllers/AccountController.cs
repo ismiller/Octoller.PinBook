@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Octoller.PinBook.Web.Data.Model;
 using Octoller.PinBook.Web.Kernel;
 using Octoller.PinBook.Web.Kernel.Services;
-using Octoller.PinBook.Web.ViewModels;
+using Octoller.PinBook.Web.ViewModels.Account;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;

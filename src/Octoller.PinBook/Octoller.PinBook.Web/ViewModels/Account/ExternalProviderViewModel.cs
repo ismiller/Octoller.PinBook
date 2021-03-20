@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authentication;
 using System.Collections.Generic;
 
-namespace Octoller.PinBook.Web.ViewModels
+namespace Octoller.PinBook.Web.ViewModels.Account
 {
     public class ExternalProviderViewModel
     {

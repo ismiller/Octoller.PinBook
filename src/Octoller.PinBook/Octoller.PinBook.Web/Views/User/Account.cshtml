@@ -1,8 +1,8 @@
-﻿@model ProfileViewModel;
+﻿@model AccountViewModel;
 
 @{
     Layout = "_Layout";
-    ViewData["Title"] = "PinBook.Profile: " + @Model.Name;
+    ViewData["Title"] = "PinBook.Account";
 }
 
 <div class="container">
@@ -11,9 +11,9 @@
         <div class="col-1 pt-5">
             <h5 class="text-center">@Model.Name</h5>
             <nav class="nav flex-column nav-pills">
-                <a class="nav-link active" aria-current="page" href="#">Профиль</a>
+                <a class="nav-link" asp-action="Profile" asp-controller="User">Профиль</a>
                 <a class="nav-link" href="#">Списки</a>
-                <a class="nav-link" asp-action="Account" asp-controller="User">Аккаунт</a>
+                <a class="nav-link active" aria-current="page" href="#">Аккаунт</a>
             </nav>
         </div>
         <div class="col-5 pt-5">
