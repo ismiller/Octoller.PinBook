@@ -18,9 +18,10 @@
 <hr />
 
 <!-- Кнопки авторизации через сторонние сервисы -->
-@foreach (var provider in Model.Providers) {
+@foreach (var provider in Model.Providers) 
+{
     <div class="mb-3 d-grid gap-1 mx-auto">
-        <a class="navbar-item btn btn-outline-primary btn-block" asp-action="ExternalLogin"
+        <a class="btn btn-outline-primary btn-block" asp-action="ExternalRegister"
            asp-controller="Account" asp-route-returnUrl="@Model.ReturnUrl"
            asp-route-providerName="@provider.Name">@provider.DisplayName</a>
     </div>

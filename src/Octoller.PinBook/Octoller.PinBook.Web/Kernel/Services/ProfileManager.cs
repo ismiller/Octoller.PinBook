@@ -25,12 +25,12 @@ namespace Octoller.PinBook.Web.Kernel.Services
         {
             if (targetUser is null)
             {
-                return await FailedResult("Пользователь не указан.");
+                return FailedResult("Пользователь не указан.");
             }
 
             if (newProfile is null)
             {
-                return await FailedResult("Профиль не указан.");
+                return FailedResult("Профиль не указан.");
             }
 
             var profile = await ProfileStore.GetByUserIdAsync(targetUser.Id);
@@ -47,25 +47,40 @@ namespace Octoller.PinBook.Web.Kernel.Services
 
                 if (!result)
                 {
-                    return await FailedResult("Ошибка записи");
+                    return FailedResult("Ошибка записи");
                 }
 
                 return IdentityResult.Success;
             }
 
-            return await FailedResult("Профиль уже создан.");
+            return FailedResult("Профиль уже создан.");
+        }
+
+        /// <summary>
+        /// Создает профиль информации о пользователе.
+        /// </summary>
+        /// <param name="targetUser">Пользователь, для которого создается профиль.</param>
+        /// <returns><see cref="IdentityResult"/>.</returns>
+        public async Task<IdentityResult> CreateProfileAsync(User targetUser)
+        {
+            if (targetUser is null)
+            {
+                return FailedResult("Пользователь не указан.");
+            }
+
+            return await CreateProfileAsync(targetUser, new Profile());
         }
 
         public async Task<IdentityResult> UpdateProfileAsync(User targetUser, Profile modifiedProfile)
         {
             if (targetUser is null)
             {
-                return await FailedResult("Пользователь не указан.");
+                return FailedResult("Пользователь не указан.");
             }
 
             if (modifiedProfile is null)
             {
-                return await FailedResult("Профиль не указан.");
+                return FailedResult("Профиль не указан.");
             }
 
             var currentProfile = await ProfileStore.GetByUserIdAsync(targetUser.Id);
@@ -78,9 +93,9 @@ namespace Octoller.PinBook.Web.Kernel.Services
                 {
                     currentProfile.Name = modifiedProfile.Name;
                     currentProfile.About = modifiedProfile.About;
-                    currentProfile.Avatar = modifiedProfile.Avatar;
                     currentProfile.Location = modifiedProfile.Location;
                     currentProfile.Site = modifiedProfile.Site;
+                    currentProfile.Avatar = modifiedProfile.Avatar;
 
                     var updateResult = await ProfileStore.UpdateAsync(currentProfile);
 
@@ -90,14 +105,14 @@ namespace Octoller.PinBook.Web.Kernel.Services
                     } 
                     else
                     {
-                        await FailedResult("Внутренняя ошибка.");
+                        FailedResult("Внутренняя ошибка.");
                     }
                 }
 
                 return IdentityResult.Failed(validateResult.Errors.ToArray());
             }
 
-            return await FailedResult("Профиль не найден.");
+            return FailedResult("Профиль не найден.");
         }
 
         /// <summary>
@@ -137,13 +152,13 @@ namespace Octoller.PinBook.Web.Kernel.Services
             return await Task.FromResult(IdentityResult.Success);
         }
 
-        private Task<IdentityResult> FailedResult(string description)
+        private IdentityResult FailedResult(string description)
         {
-            return Task.FromResult(IdentityResult.Failed(new IdentityError
+            return IdentityResult.Failed(new IdentityError
             {
                 Code = "",
                 Description = description
-            }));
+            });
         }
     }
 }

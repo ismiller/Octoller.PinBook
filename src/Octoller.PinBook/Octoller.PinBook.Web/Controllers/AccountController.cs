@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Octoller.PinBook.Web.Data.Model;
-using Octoller.PinBook.Web.Kernel;
 using Octoller.PinBook.Web.Kernel.Services;
 using Octoller.PinBook.Web.ViewModels.Account;
 using System.Linq;
@@ -15,7 +14,7 @@ namespace Octoller.PinBook.Web.Controllers
         private UserManager<User> UserManager { get; }
         private SignInManager<User> SignInManager { get; }
         private ProfileManager ProfileManager { get; }
-        private AccountManager AccountManager { get; set; }
+        private AccountManager AccountManager { get; }
 
         public AccountController(
             UserManager<User> userManager,
@@ -231,8 +230,6 @@ namespace Octoller.PinBook.Web.Controllers
 
             return result.Succeeded;
         }
-
-
 
         private IActionResult ExternalChallenge(string returnUrl, string methodName, string providerName)
         {
