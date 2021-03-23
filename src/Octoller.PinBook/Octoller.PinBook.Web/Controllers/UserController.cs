@@ -79,20 +79,17 @@ namespace Octoller.PinBook.Web.Controllers
             return View(new ProfileViewModel());
         }
 
+        [HttpGet]
         [Authorize(Policy = "Users")]
-        [HttpPost]
         public async Task<IActionResult> Account()
         {
-
             var user = await UserManager.FindByNameAsync(User.Identity.Name);
-
             if (user is not null)
             {
                 var profile = await ProfileManager.FindProfileByUserAsync(user); 
                 if (profile is not null)
                 {
-                    var vk = (await SignInManager.GetExternalAuthenticationSchemesAsync())
-                        .Any(s => s.Name == "VKontakte");
+                    var vk = await IsExternalAuthSchem("VKontakte");
 
                     return View(new AccountViewModel
                     {
@@ -105,5 +102,9 @@ namespace Octoller.PinBook.Web.Controllers
 
             return View(new AccountViewModel());
         }
+
+        private async Task<bool> IsExternalAuthSchem(string schemeName) =>
+            (await SignInManager.GetExternalAuthenticationSchemesAsync())
+                        .Any(s => s.Name == "schemeName");
     }
 }
