@@ -14,15 +14,18 @@ namespace Octoller.PinBook.Web.Controllers
         private ProfileManager ProfileManager { get; }
         private UserManager<User> UserManager { get; }
         private SignInManager<User> SignInManager { get; }
+        private AccountManager AccountManager { get; }
 
         public UserController(
             ProfileManager profileManager,
             UserManager<User> userManager,
-            SignInManager<User> signInManager)
+            SignInManager<User> signInManager,
+            AccountManager accountManager)
         {
             ProfileManager = profileManager;
             UserManager = userManager;
             SignInManager = signInManager;
+            AccountManager = accountManager;
         }
 
         [Authorize(Policy = "Users")]
@@ -52,8 +55,8 @@ namespace Octoller.PinBook.Web.Controllers
 
         [HttpPost]
         [Authorize(Policy = "Users")]
-        [AutoValidateAntiforgeryToken]
-        public async Task<IActionResult> Profile(ProfileViewModel profileModel)
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateProfile(ProfileViewModel profileModel)
         {
             if (profileModel is not null)
             {
@@ -97,6 +100,45 @@ namespace Octoller.PinBook.Web.Controllers
                         Email = user.Email,
                         VkAccount = vk
                     });
+                }
+            }
+
+            return View(new AccountViewModel());
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "Users")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> UpdateAccount(AccountViewModel accountModel)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await UserManager.FindByNameAsync(User.Identity.Name);
+                if (user is not null)
+                {
+                    var updateResult = await AccountManager.UpdateAccount(user.Id, accountModel.Email, accountModel.Password);
+                    if (updateResult.Succeeded)
+                    {
+                        var vk = await IsExternalAuthSchem("VKontakte");
+
+                        return View(new AccountViewModel
+                        {
+                            Name = user.UserName,
+                            Email = user.Email,
+                            VkAccount = vk
+                        });
+                    } 
+                    else
+                    {
+                        foreach(var e in updateResult.Errors)
+                        {
+                            ModelState.AddModelError("", e.Description);
+                        }
+                    }
+                } 
+                else
+                {
+                    ModelState.AddModelError("", "Пользователь не найден.");
                 }
             }
 
