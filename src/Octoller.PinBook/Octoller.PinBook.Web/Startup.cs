@@ -94,7 +94,7 @@ namespace Octoller.PinBook.Web
 
         private void ConfigureOptions(OAuthOptions options)
         {
-            options.ClaimsIssuer = "Vkontakte";
+            options.ClaimsIssuer = "VKontakte";
             options.ClientId = Configuration["VkOptionsData:ClientId"];
             options.ClientSecret = Configuration["VkOptionsData:ClientSecret"];
             options.CallbackPath = new PathString(Configuration["VkOptionsData:CallbackPathAccount"]);

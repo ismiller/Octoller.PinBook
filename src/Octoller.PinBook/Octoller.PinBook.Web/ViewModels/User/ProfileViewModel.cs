@@ -1,12 +1,9 @@
-﻿namespace Octoller.PinBook.Web.ViewModels.Profiles
-{
-    public class ProfileViewModel
-    {
-        /// <summary>
-        /// Имя пользователя
-        /// </summary>
-        public string Name { get; set; }
+﻿using Octoller.PinBook.Web.ViewModels.Base;
 
+namespace Octoller.PinBook.Web.ViewModels.User
+{
+    public class ProfileViewModel : NamedBase
+    {
         /// <summary>
         /// Сайт пользователя
         /// </summary>

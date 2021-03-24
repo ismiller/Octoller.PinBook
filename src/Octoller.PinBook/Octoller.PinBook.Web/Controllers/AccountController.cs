@@ -16,6 +16,8 @@ namespace Octoller.PinBook.Web.Controllers
         private ProfileManager ProfileManager { get; }
         private AccountManager AccountManager { get; }
 
+        private IActionResult Home { get => RedirectToAction("Index", "Home"); }
+
         public AccountController(
             UserManager<User> userManager,
             SignInManager<User> signInManager,
@@ -30,17 +32,17 @@ namespace Octoller.PinBook.Web.Controllers
 
 
         [HttpGet]
-        public async Task<IActionResult> Login(string returnUrl)
+        public async Task<IActionResult> Login()
         {
             if (User.Identity.IsAuthenticated)
             {
-                return RedirectToAction(returnUrl);
+                return Home;
             }
 
             var providers = await SignInManager.GetExternalAuthenticationSchemesAsync();
 
-            return View(new LoginViewModel { 
-                ReturnUrl = returnUrl ?? Url.Action("Index", "Home"),
+            return View(new LoginViewModel 
+            {
                 Providers = providers
             });
         }
@@ -51,7 +53,7 @@ namespace Octoller.PinBook.Web.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return Redirect(loginModel.ReturnUrl);
+                return Home;
             }
 
             if (ModelState.IsValid)
@@ -70,7 +72,7 @@ namespace Octoller.PinBook.Web.Controllers
                     {
                         await ProfileManager.CreateProfileAsync(user, new Profile());
 
-                        return Redirect(loginModel.ReturnUrl);
+                        return Home;
                     }
                 }
                 else
@@ -89,18 +91,17 @@ namespace Octoller.PinBook.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> Register(string returnUrl)
+        public async Task<IActionResult> Register()
         {
             if (User.Identity.IsAuthenticated)
             {
-                return Redirect(returnUrl);
+                return Home;
             }
 
             var providers = await SignInManager.GetExternalAuthenticationSchemesAsync();
 
             return View(new RegisterViewModel
             {
-                ReturnUrl = returnUrl ?? Url.Action("Index", "Home"),
                 Providers = providers
             });
         }
@@ -111,7 +112,7 @@ namespace Octoller.PinBook.Web.Controllers
         {
             if (User.Identity.IsAuthenticated)
             {
-                return Redirect(registerModel.ReturnUrl);
+                return Home;
             }
 
             if (ModelState.IsValid)
@@ -126,7 +127,7 @@ namespace Octoller.PinBook.Web.Controllers
                     await ProfileManager.CreateProfileAsync(user, new Profile());
                     await SignInManager.SignInAsync(user, true);
 
-                    return Redirect(registerModel.ReturnUrl);
+                    return Home;
                 } 
                 else
                 {
@@ -141,31 +142,28 @@ namespace Octoller.PinBook.Web.Controllers
         }
 
         [HttpGet]
-        public IActionResult ExternalLogin(string returnUrl, string providerName) =>
-            ExternalChallenge(returnUrl, nameof(ExternalLoginCallback), providerName);
+        public IActionResult ExternalLogin(string providerName) =>
+            ExternalChallenge(nameof(ExternalLoginCallback), providerName);
 
         [HttpGet]
-        public IActionResult ExternalRegister(string returnUrl, string providerName) =>
-            ExternalChallenge(returnUrl, nameof(ExternalRegisterCallback), providerName);
+        public IActionResult ExternalRegister(string providerName) =>
+            ExternalChallenge(nameof(ExternalRegisterCallback), providerName);
 
         [HttpGet]
-        public async Task<IActionResult> ExternalLoginCallback(string returnUrl)
+        public async Task<IActionResult> ExternalLoginCallback()
         {
             var loginInfo = await SignInManager.GetExternalLoginInfoAsync();
-            
-            if (loginInfo is null)
+
+            if (loginInfo is not null)
             {
-                return RedirectToAction("Login", "Account");
+                var result = await IsSuccessExternalSignIn(loginInfo);
+                if (result)
+                {
+                    return Home;
+                }
             }
 
-            if (await IsSuccessExternalSignIn(loginInfo))
-            {
-                return Redirect(returnUrl);
-            }
-            else
-            {
-                return RedirectToAction(nameof(ExternalRegisterCallback), "Account", returnUrl);
-            }
+            return RedirectToAction(nameof(ExternalRegisterCallback), "Account", Home);
         }
 
         [HttpGet]
@@ -207,17 +205,14 @@ namespace Octoller.PinBook.Web.Controllers
                 }
             }
 
-            return RedirectToAction("Login", new LoginViewModel
-            {
-                ReturnUrl = returnUrl
-            });
+            return RedirectToAction("Login", new LoginViewModel());
         }
 
         [HttpGet]
         public async Task<IActionResult> LogOut()
         {
             await SignInManager.SignOutAsync();
-            return RedirectToAction("Index", "Home");
+            return Home;
         }
 
         private async Task<bool> IsSuccessExternalSignIn(ExternalLoginInfo loginInfo)
@@ -231,9 +226,9 @@ namespace Octoller.PinBook.Web.Controllers
             return result.Succeeded;
         }
 
-        private IActionResult ExternalChallenge(string returnUrl, string methodName, string providerName)
+        private IActionResult ExternalChallenge(string methodName, string providerName)
         {
-            returnUrl ??= Url.Action("Index", "Home");
+            string returnUrl = Url.Action("Index", "Home");
             var redirectUrl = Url.Action(methodName, "Account", new { returnUrl });
             var properties = SignInManager.ConfigureExternalAuthenticationProperties(providerName, redirectUrl);
 

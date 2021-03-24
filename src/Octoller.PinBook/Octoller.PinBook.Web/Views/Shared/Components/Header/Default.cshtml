@@ -12,7 +12,7 @@
 
                     <!-- Навигация -->>
                     <li class="nav-item">
-                        <a class="nav-link disabled" href="">Главаная</a>
+                        <a class="nav-link" asp-action="Index" asp-controller="Home">Главная</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link disabled" href="">Списки книг</a>
@@ -31,7 +31,7 @@
                                role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 @Model.ShowName
                             </a>
-                            <ul class="dropdown-menu dropdown-menu-right dropdown-menu-dark" aria-labelledby="navbarDropdown">
+                            <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark" aria-labelledby="navbarDropdown">
                                 <li><a asp-controller="User" asp-action="Profile" class="dropdown-item">Ваш профиль</a></li>
                                 <li><a href="#" class="dropdown-item disabled">Ваши списки</a></li>
                                 <li><div class="dropdown-divider"></div></li>

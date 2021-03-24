@@ -1,11 +1,10 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Octoller.PinBook.Web.ViewModels.Base;
+using System.ComponentModel.DataAnnotations;
 
-namespace Octoller.PinBook.Web.ViewModels.Profiles
+namespace Octoller.PinBook.Web.ViewModels.User
 {
-    public class AccountViewModel
+    public class AccountViewModel : NamedBase
     {
-        public string Name { get; set; }
-
         [Display(Name = "Email")]
         [DataType(DataType.EmailAddress)]
         [Required(ErrorMessage = "Не указан Email")]
@@ -20,7 +19,5 @@ namespace Octoller.PinBook.Web.ViewModels.Profiles
         [DataType(DataType.Password)]
         [Required(ErrorMessage = "Не указан пароль")]
         public string CurrentPassword { get; set; }
-
-        public bool VkAccount { get; set; }
     }
 }

@@ -4,8 +4,6 @@ namespace Octoller.PinBook.Web.ViewModels.Account
 {
     public class LoginViewModel : ExternalProviderViewModel
     {
-        public string ReturnUrl { get; set; }
-
         [Display(Name = "Email")]
         [DataType(DataType.EmailAddress)]
         [Required(ErrorMessage = "Не указан Email")]

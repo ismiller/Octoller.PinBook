@@ -8,18 +8,17 @@
 <div class="container">
     <div class="row">
         <div class="col-2 pt-5"></div>
-        <div class="col-1 pt-5">
+        <div class="col-2 pt-5">
             <h5 class="text-center">@Model.Name</h5>
             <hr />
             <nav class="nav flex-column nav-pills">
                 <a class="nav-link" asp-action="Profile" asp-controller="User">Профиль</a>
                 <a class="nav-link" href="#">Списки</a>
                 <a class="nav-link active" aria-current="page" href="#">Аккаунт</a>
+                <a class="nav-link" asp-action="Networks" asp-controller="User">Соцсети</a>
             </nav>
         </div>
-        <div class="col-1 pt-5">
-        </div>
-        <div class="col-5 pt-5">
+        <div class="col-6 pt-5">
             <h5 class="text-center">Настройки</h5>
             <hr />
             <form method="post" asp-action="Account" asp-controller="User" asp-antiforgery="true">
@@ -46,6 +45,6 @@
                 </div>
             </form>
         </div>
-        <div class="col-2 pt-5"></div>
+        <div class="col-1 pt-5"></div>
     </div>
 </div>

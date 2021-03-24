@@ -1,17 +1,22 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Octoller.PinBook.Web.Data.Model;
+using Octoller.PinBook.Web.Kernel.Services;
 using Octoller.PinBook.Web.ViewModels;
 
 namespace Octoller.PinBook.Web.Kernel.Html.Components
 {
     public class Header : ViewComponent 
     {
-        private readonly UserManager<User> userManager;
+        private UserManager<User> UserManager { get; }
+        private ProfileManager ProfileManager { get; }
 
-        public Header(UserManager<User> userManager)
+        public Header(
+            UserManager<User> userManager,
+            ProfileManager profileManager)
         {
-            this.userManager = userManager;
+            UserManager = userManager;
+            ProfileManager = profileManager;
         }
 
         public IViewComponentResult Invoke()
@@ -24,9 +29,10 @@ namespace Octoller.PinBook.Web.Kernel.Html.Components
 
             if (headerInfo.IsAuthenticated)
             {
-                //string id = this.userManager.FindByNameAsync(User.Identity.Name).Result?.Id;
+                var user = UserManager.FindByNameAsync(User.Identity.Name).Result;
+                var showName = ProfileManager.FindProfileByUserAsync(user).Result?.Name;
 
-                headerInfo.ShowName = User.Identity.Name;
+                headerInfo.ShowName = showName ?? User.Identity.Name;
             }
 
             return View(headerInfo);

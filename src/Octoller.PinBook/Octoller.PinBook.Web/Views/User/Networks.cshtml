@@ -1,0 +1,64 @@
+﻿@model NetworksViewModel;
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "PinBook.Networks: " + @Model.Name;
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-2 pt-5"></div>
+        <div class="col-2 pt-5">
+            <h5 class="text-center">@Model.Name</h5>
+            <hr />
+            <nav class="nav flex-column nav-pills">
+                <a class="nav-link" asp-action="Profile" asp-controller="User">Профиль</a>
+                <a class="nav-link disabled" href="#">Списки</a>
+                <a class="nav-link" asp-action="Account" asp-controller="User">Аккаунт</a>
+                <a class="nav-link active" href="#">Соцсети</a>
+            </nav>
+        </div>
+        <div class="col-6 pt-5">
+            <h5 class="text-center">Настройки</h5>
+            <hr />
+            <table class="table table-borderless">
+                <tr>
+                    <td>VKontakte</td>
+                    <td width="40">
+                        <form method="post" asp-action="Networks" asp-controller="User" asp-antiforgery="true" 
+                              asp-route-providerName="VK">
+                            <div class="mb-3 d-grid gap-2 mx-auto">
+                                @if (Model.VKontakte)
+                                {
+                                    <input type="submit" value="Отключить" class="btn btn-danger" />
+                                } 
+                                else
+                                {
+                                    <input type="submit" value="Подключить" class="btn btn-success" />
+                                }
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Yandex</td>
+                    <td width="40">
+                        <form method="post" asp-action="Networks" asp-controller="User" asp-antiforgery="true" 
+                              asp-route-providerName="Yandex">
+                            <div class="mb-3 d-grid gap-2 mx-auto">
+                                @if (Model.Yandex)
+                                {
+                                    <input type="submit" value="Отключить" class="btn btn-danger disabled" />
+                                } else
+                                {
+                                    <input type="submit" value="Подключить" class="btn btn-success disabled" />
+                                }
+                            </div>
+                        </form>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <div class="col-1 pt-5"></div>
+    </div>
+</div>

@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Octoller.PinBook.Web.Data.Model;
 using Octoller.PinBook.Web.Kernel.Services;
-using Octoller.PinBook.Web.ViewModels.Profiles;
+using Octoller.PinBook.Web.ViewModels.User;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -28,8 +28,14 @@ namespace Octoller.PinBook.Web.Controllers
             AccountManager = accountManager;
         }
 
-        [Authorize(Policy = "Users")]
+        public async Task<IActionResult> Index(string id)
+        {
+
+            return View();
+        }
+
         [HttpGet]
+        [Authorize(Policy = "Users")]
         public async Task<IActionResult> Profile()
         {
             var user = await UserManager.FindByNameAsync(User.Identity.Name);
@@ -99,17 +105,11 @@ namespace Octoller.PinBook.Web.Controllers
             if (user is not null)
             {
                 var profile = await ProfileManager.FindProfileByUserAsync(user); 
-                if (profile is not null)
+                return View(new AccountViewModel
                 {
-                    var vk = await IsExternalAuthSchem("VKontakte");
-
-                    return View(new AccountViewModel
-                    {
-                        Name = profile.Name,
-                        Email = user.Email,
-                        VkAccount = vk
-                    });
-                }
+                    Name = profile?.Name ?? user.UserName,
+                    Email = user.Email
+                });
             }
 
             return View(new AccountViewModel());
@@ -128,36 +128,31 @@ namespace Octoller.PinBook.Web.Controllers
                     if (await UserManager.CheckPasswordAsync(user, accountModel.CurrentPassword))
                     {
                         var profile = await ProfileManager.FindProfileByUserAsync(user);
-                        if (profile is not null)
+                        var updateResult = await AccountManager.UpdateAccount(user.Id, accountModel.Email, accountModel.Password);
+
+                        if (updateResult.Succeeded)
                         {
-                            var vk = await IsExternalAuthSchem("VKontakte");
+                            var newUser = await UserManager.FindByNameAsync(User.Identity.Name);
 
-                            var updateResult = await AccountManager.UpdateAccount(user.Id, accountModel.Email, accountModel.Password);
-                            if (updateResult.Succeeded)
+                            return View(new AccountViewModel
                             {
-                                var newUser = await UserManager.FindByNameAsync(User.Identity.Name);
-
-                                return View(new AccountViewModel
-                                {
-                                    Name = profile.Name,
-                                    Email = newUser.Email,
-                                    VkAccount = vk
-                                });
-                            } else
+                                Name = profile?.Name ?? user.UserName,
+                                Email = newUser.Email
+                            });
+                        } else
+                        {
+                            foreach (var e in updateResult.Errors)
                             {
-                                foreach (var e in updateResult.Errors)
-                                {
-                                    ModelState.AddModelError("", e.Description);
-                                }
-
-                                return View(new AccountViewModel
-                                {
-                                    Name = profile.Name,
-                                    Email = user.Email,
-                                    VkAccount = vk
-                                });
+                                ModelState.AddModelError("", e.Description);
                             }
+
+                            return View(new AccountViewModel
+                            {
+                                Name = profile?.Name ?? user.UserName,
+                                Email = user.Email
+                            });
                         }
+                        
                     } 
                     else
                     {
@@ -173,8 +168,80 @@ namespace Octoller.PinBook.Web.Controllers
             return View(accountModel);
         }
 
-        private async Task<bool> IsExternalAuthSchem(string schemeName) =>
-            (await SignInManager.GetExternalAuthenticationSchemesAsync())
-                        .Any(s => s.Name == schemeName);
+        [HttpGet]
+        [Authorize(Policy = "Users")]
+        public async Task<IActionResult> Networks()
+        {
+            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+            var profile = await ProfileManager.FindProfileByUserAsync(user);
+            
+            return View(new NetworksViewModel
+            {
+                Name = profile?.Name ?? user.UserName,
+                VKontakte = await IsExternalAuthSchem(user, "VK"),
+                Yandex = await IsExternalAuthSchem(user, "Yandex")
+            });
+        }
+
+        [HttpPost]
+        [Authorize(Policy = "Users")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Networks(string providerName)
+        {
+            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+            var isConnect = await IsExternalAuthSchem(user, providerName);
+
+            if (!isConnect)
+            {
+                var returnUrl = Url.Action("Networks", "User");
+                var redirectUrl = Url.Action(nameof(LinkExternalAccountCallback), "User", new { returnUrl });
+                var properties = SignInManager.ConfigureExternalAuthenticationProperties("VK", redirectUrl);
+
+                return Challenge(properties, "VK");
+            }
+            else
+            {
+                var profile = await ProfileManager.FindProfileByUserAsync(user);
+                var info = (await UserManager.GetLoginsAsync(user))
+                    .Where(ul => ul.LoginProvider == providerName)
+                    .FirstOrDefault();
+
+                var removeResult = await UserManager.RemoveLoginAsync(user, info.LoginProvider, info.ProviderKey); 
+                if (!removeResult.Succeeded)
+                {
+                    foreach (var e in removeResult.Errors)
+                    {
+                        ModelState.AddModelError("", e.Description);
+                    }
+                }
+
+                return View(new NetworksViewModel
+                {
+                    Name = profile?.Name ?? user.UserName,
+                    VKontakte = await IsExternalAuthSchem(user, "VK"),
+                    Yandex = await IsExternalAuthSchem(user, "Yandex")
+                });
+            }
+        }
+
+        [HttpGet]
+        [Authorize(Policy = "Users")]
+        public async Task<IActionResult> LinkExternalAccountCallback(string returnUrl)
+        {
+            var info = await SignInManager.GetExternalLoginInfoAsync();
+            var user = await UserManager.FindByNameAsync(User.Identity.Name);
+
+            var addLoginResult = await UserManager.AddLoginAsync(user, info);
+            if (addLoginResult.Succeeded)
+            {
+                await SignInManager.SignOutAsync();
+                await SignInManager.SignInAsync(user, true);
+            }
+
+            return Redirect(returnUrl);
+        }
+
+        private async Task<bool> IsExternalAuthSchem(User user, string schemeName) =>
+            (await UserManager.GetLoginsAsync(user)).Any(ul => ul.LoginProvider == schemeName);
     }
 }
